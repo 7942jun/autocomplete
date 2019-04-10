@@ -1,4 +1,6 @@
 import tensorflow as tf
+import numpy as np
+
 
 class ACTrainer:
     def __init__(self, sess, model, data, config):
@@ -23,19 +25,22 @@ class ACTrainer:
 
     def test(self):
         prediction = tf.cast(tf.argmax(self.model.output, 1), tf.int32)
-        prediction_check = tf.equal(prediction, self.model.Y)
-        accuracy = tf.reduce_mean(tf.cast(prediction_check, tf.float32))
+        num_dic = {n: i for i, n in enumerate(self.data.char_arr)}
 
-        input_batch, target_batch = self.data.batch()
+        while True:
+            user_input = input('Enter part of word(enter q to quit): ')
+            if user_input == 'q':
+                break
+            user_input_decode = [num_dic[n] for n in user_input]
+            input_batch = [np.eye(self.config.dic_len)[user_input_decode]]
 
-        predict, accuracy_val = self.sess.run([prediction, accuracy], feed_dict={self.model.X: input_batch, self.model.Y: target_batch})
+            predict = self.sess.run(prediction, feed_dict={
+                                    self.model.X: input_batch})
 
-        predict_words = []
-        for idx, val in enumerate(self.data.word_data):
-        	last_char = self.data.char_arr[predict[idx]]
-        	predict_words.append(val[:3] + last_char)
+            last_char = self.data.char_arr[predict[0]]
+            predict_word = user_input + last_char
 
-        print('\n===예측 결과===')
-        print('입력값: ', [w[:3] + ' ' for w in self.data.word_data])
-        print('예측값: ', predict_words)
-        print('정확도: ', accuracy_val)
+            print('\n===예측 결과===')
+            print('입력값: ', user_input)
+            print('예측값: ', predict_word)
+            print('')

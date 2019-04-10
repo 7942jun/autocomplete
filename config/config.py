@@ -3,6 +3,6 @@ class Config:
         self.learning_rate = 0.01
         self.n_hidden = 128
         self.total_epoch = 100
-        self.n_step = 3
-        self.n_input = 26
-        self.n_class = 26
+        self.dic_len = 26
+        self.n_class = self.dic_len
+        self.n_input = self.dic_len

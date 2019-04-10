@@ -6,7 +6,7 @@ class ACModel:
         self.build_model()
 
     def build_model(self):
-        self.X = tf.placeholder(tf.float32, [None, self.config.n_step, self.config.n_input])
+        self.X = tf.placeholder(tf.float32, [None, None, self.config.n_input])
         self.Y = tf.placeholder(tf.int32, [None])
         W = tf.Variable(tf.random_normal([self.config.n_hidden, self.config.n_class]))
         b = tf.Variable(tf.random_normal([self.config.n_class]))
